@@ -17,6 +17,6 @@
     "tap": "~0.4.8"
   },
   "scripts": {
-    "test": "node_modules/.bin/tap test/*.js"
+    "test": "tap test/*.js"
   }
 }
