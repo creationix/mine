@@ -6,7 +6,6 @@ module.exports = mine;
 function mine(js) {
   js = String(js);
   var names = [];
-  var state = 0;
   var ident;
   var quote;
   var name;
@@ -16,9 +15,7 @@ function mine(js) {
   var isWhitespace = /[ \r\n\t]/;
 
   function $start(char) {
-    if (char === "/") {
-      return $slash;
-    }
+    if (char === "/") return $slash;
     if (char === "'" || char === '"') {
       quote = char;
       return $string;
@@ -57,9 +54,7 @@ function mine(js) {
   }
 
   function $name(char) {
-    if (char === quote) {
-      return $close;
-    }
+    if (char === quote) return $close;
     name += char;
     return $name;
   }
@@ -72,17 +67,12 @@ function mine(js) {
         offset: start
       });
     }
-    name = undefined;
     return $start(char);
   }
 
   function $string(char) {
-    if (char === "\\") {
-      return $escape;
-    }
-    if (char === quote) {
-      return $start;
-    }
+    if (char === "\\") return $escape;
+    if (char === quote) return $start;
     return $string;
   }
 
