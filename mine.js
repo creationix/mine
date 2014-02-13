@@ -101,7 +101,7 @@ function mine(js) {
     return $string;
   }
 
-  function $escape(char) {
+  function $escape() {
     return $string;
   }
 
@@ -127,7 +127,7 @@ function mine(js) {
     return $multilineComment;
   }
 
-  var state = $start;
+  state = $start;
   for (var i = 0, l = js.length; i < l; i++) {
     state = state(js[i]);
   }
