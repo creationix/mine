@@ -4,7 +4,7 @@
 // Extract all require calls using a proper state-machine parser.
 module.exports = mine;
 function mine(js) {
-  js = String(js);
+  js = "" + js;
   var names = [];
   var state = 0;
   var ident;
@@ -38,7 +38,7 @@ function mine(js) {
     if (char === "(" && ident === "require") {
       ident = undefined;
       return $call;
-    }else{
+    } else {
       if (isWhitespace.test(char)){
         if (ident !== 'yield' && ident !== 'return'){
           return $ident;
