@@ -1,6 +1,6 @@
 {
   "name": "mine",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Digs into a javascript file looking for require calls. Used to statically extract common js dependencies.",
   "main": "mine.js",
   "scripts": {
