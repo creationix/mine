@@ -63,7 +63,19 @@ function mine(js) {
     if (char === quote) {
       return $close;
     }
+    if (char === "\\") {
+      return $nameEscape;
+    }
     name += char;
+    return $name;
+  }
+
+  function $nameEscape(char) {
+    if (char === "\\") {
+      name += char;
+    } else {
+      name += JSON.parse('"\\' + char + '"');
+    }
     return $name;
   }
 
