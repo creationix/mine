@@ -12,7 +12,7 @@ function mine(js) {
   var name;
   var start;
 
-  var isIdent = /[a-z0-9_.]/i;
+  var isIdent = /[a-z0-9_.$]/i;
   var isWhitespace = /[ \r\n\t]/;
 
   function $start(char) {
