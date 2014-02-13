@@ -1,7 +1,7 @@
 mine.js
 =======
 
-The mine script accepts js source and returns all the require call locations as well as the target string. This is a submodule of [js-linker](https://github.com/creationix/js-linker).
+The mine script accepts js source and returns all the require call locations as well as the target string. This is a submodule of [js-linker](https://github.com/creationix/js-linker) and [my-filters](https://github.com/creationix/my-filters).
 
 ``` js
 var mine = require('js-linker/mine.js');
