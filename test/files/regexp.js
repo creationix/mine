@@ -1,3 +1,7 @@
-var pattern = /require("a");'/ig;
+var pattern = /require("a")/ig;
 
 require('b');
+
+/"/;
+
+require('c');

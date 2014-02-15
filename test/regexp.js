@@ -6,6 +6,7 @@ var src = fs.readFileSync(__dirname + '/files/regexp.js');
 test('regexp', function (t) {
     t.plan(1);
     t.deepEqual(mine(src), [
-      {name: 'b', offset: 44}
+      {name: 'b', offset: 42},
+      {name: 'c', offset: 63}
     ]);
 });

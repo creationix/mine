@@ -11,9 +11,11 @@ function mine(js) {
   var quote;
   var name;
   var start;
+  var previous;
 
   var isIdent = /[a-z0-9_.$]/i;
   var isWhitespace = /[ \r\n\t]/;
+  var isBeforeRegExp = /[(,=:[!&|?{};]/;
 
   function $start(char) {
     if (char === "/") {
@@ -108,9 +110,11 @@ function mine(js) {
   function $slash(char) {
     if (char === "/") return $lineComment;
     if (char === "*") return $multilineComment;
-    // regexp
-    quote = "/";
-    return $string(char);
+    if (!previous || isBeforeRegExp.test(previous)) {
+      quote = "/";
+      return $string(char);
+    }
+    return $start(char);
   }
 
   function $lineComment(char) {
@@ -140,6 +144,7 @@ function mine(js) {
 
   for (var l = js.length; i < l; i++) {
     state = state(js[i]);
+    if (!isWhitespace.test(js[i]) && js[i] !== '/') previous = js[i];
   }
   return names;
 }
