@@ -108,7 +108,9 @@ function mine(js) {
   function $slash(char) {
     if (char === "/") return $lineComment;
     if (char === "*") return $multilineComment;
-    return $start(char);
+    // regexp
+    quote = "/";
+    return $string(char);
   }
 
   function $lineComment(char) {
@@ -127,8 +129,16 @@ function mine(js) {
     return $multilineComment;
   }
 
+  var i = 0;
   state = $start;
-  for (var i = 0, l = js.length; i < l; i++) {
+
+  // check shebang
+  if (js.slice(0, 2) === '#!') {
+    state = $lineComment;
+    i = 2;
+  }
+
+  for (var l = js.length; i < l; i++) {
     state = state(js[i]);
   }
   return names;
