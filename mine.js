@@ -35,15 +35,16 @@ function mine(js) {
       ident += char;
       return $ident;
     }
+    return $identEnd(char);
+  }
+
+  function $identEnd(char) {
     if (char === "(" && ident === "require") {
       ident = undefined;
       return $call;
-    } else {
-      if (isWhitespace.test(char)){
-        if (ident !== 'yield' && ident !== 'return'){
-          return $ident;
-        }
-      }
+    }
+    if (isWhitespace.test(char)) {
+        return $identEnd;
     }
     return $start(char);
   }
