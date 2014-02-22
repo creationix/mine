@@ -19,10 +19,6 @@ function mine(js) {
     if (char === "/") {
       return $slash;
     }
-    if (char === "'" || char === '"') {
-      quote = char;
-      return $string;
-    }
     if (isIdent.test(char)) {
       ident = char;
       return $ident;
@@ -89,20 +85,6 @@ function mine(js) {
     }
     name = undefined;
     return $start(char);
-  }
-
-  function $string(char) {
-    if (char === "\\") {
-      return $escape;
-    }
-    if (char === quote) {
-      return $start;
-    }
-    return $string;
-  }
-
-  function $escape() {
-    return $string;
   }
 
   function $slash(char) {
