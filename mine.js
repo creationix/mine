@@ -5,15 +5,25 @@
 module.exports = mine;
 function mine(js) {
   js = "" + js;
+
+  var l = js.length;
+  var i;
   var names = [];
-  var state = 0;
+  var state;
   var ident;
   var quote;
   var name;
   var start;
+  var regexBacktrack;
 
   var isIdent = /[a-z0-9_.$]/i;
   var isWhitespace = /[ \r\n\t]/;
+  function isNewLine(char) {
+    return char === "\r" || char === "\n";
+  }
+  function isEOF() {
+    return i == (l - 1);
+  }
 
   function $start(char) {
     if (char === "/") {
@@ -22,6 +32,9 @@ function mine(js) {
     if (char === "'" || char === '"') {
       quote = char;
       return $string;
+    }
+    if (char === "#") {
+      return $hash;
     }
     if (isIdent.test(char)) {
       ident = char;
@@ -35,16 +48,19 @@ function mine(js) {
       ident += char;
       return $ident;
     }
+    return $identEnd(char);
+  }
+
+  function $identEnd(char) {
     if (char === "(" && ident === "require") {
       ident = undefined;
       return $call;
-    } else {
-      if (isWhitespace.test(char)){
-        if (ident !== 'yield' && ident !== 'return'){
-          return $ident;
-        }
-      }
     }
+
+    if (isWhitespace.test(char)) {
+        return $identEnd;
+    }
+
     return $start(char);
   }
 
@@ -108,11 +124,12 @@ function mine(js) {
   function $slash(char) {
     if (char === "/") return $lineComment;
     if (char === "*") return $multilineComment;
-    return $start(char);
+    regexBacktrack = i;
+    return $regex(char);
   }
 
   function $lineComment(char) {
-    if (char === "\r" || char === "\n") return $start;
+    if (isNewLine(char)) return $start;
     return $lineComment;
   }
 
@@ -127,8 +144,38 @@ function mine(js) {
     return $multilineComment;
   }
 
+  function $regex(char) {
+    if (char === "\\") {
+      return $regexEscape;
+    }
+    if (char === "/") {
+      regexBacktrack = null;
+      return $start;
+    }
+    if (isNewLine(char) || isEOF()) {
+      // This isn't a regex, must have been division!
+      // backtrack and pretend we knew that.
+      i = regexBacktrack - 1;
+      return $start;
+    }
+
+    return $regex;
+  }
+
+  function $regexEscape() {
+    return $regex;
+  }
+
+  function $hash(char) {
+    if (char === '!') {
+      // technically shebang, but equivalent for JS
+      return $lineComment
+    }
+    return $start;
+  }
+
   state = $start;
-  for (var i = 0, l = js.length; i < l; i++) {
+  for (i = 0; i < l; i++) {
     state = state(js[i]);
   }
   return names;
